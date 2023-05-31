@@ -1,0 +1,147 @@
+<html>
+<head>
+    <style>
+        #field {
+            position: relative;
+            width: 398px;
+            height: 795px;
+            background-image: url('field.png');
+        }
+        #box {
+            position: absolute;
+            width: 91px; /* 11 inch * 8.29 (px/inch) */
+            height: 91px;            
+            background-color: red;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #greenBox {
+            position: absolute;
+            width: 190px;
+            height: 99px;
+            background-color: rgb(60, 222, 60);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="field">
+        <div id="box">Dead Bot</div>
+        <div id="greenBox">Assigned Loading Zone</div>
+    </div>
+
+    <script>
+    window.onload = function() {
+        var field = document.getElementById('field');
+        var box = document.getElementById('box');
+        var greenBox = document.getElementById('greenBox');
+
+        // var maxX = field.clientWidth - box.offsetWidth;
+        var maxX = field.clientWidth;
+
+        // Set maxY to be between 30 and 300
+        var minY = 140;
+        var maxY = 600;
+
+        box.style.left = Math.floor(Math.random() * maxX) + 'px';
+        box.style.top = minY + Math.floor(Math.random() * (maxY - minY)) + 'px';
+
+        // Rotate the box randomly
+        var randomDegree = Math.floor(Math.random() * 90);
+        box.style.transform = 'rotate(' + randomDegree + 'deg)';
+
+        // Convert degree to radian for Math functions
+        var randomRadian = randomDegree * Math.PI / 180;
+
+        // Function to rotate a point {x, y} around another point {px, py} by a certain angle
+        function rotatePoint(px, py, angle, p) {
+            var s = Math.sin(angle);
+            var c = Math.cos(angle);
+
+            // Translate point back to origin
+            p.x -= px;
+            p.y -= py;
+
+            // Rotate point
+            var xnew = p.x * c - p.y * s;
+            var ynew = p.x * s + p.y * c;
+
+            // Translate point back
+            p.x = xnew + px;
+            p.y = ynew + py;
+            return p;
+        }
+
+        // Coordinates of the box's center
+        var centerX = box.offsetLeft + box.offsetWidth / 2;
+        var centerY = box.offsetTop + box.offsetHeight / 2;
+
+        // Coordinates of the box's corners
+        var corners = [
+            {x: box.offsetLeft, y: box.offsetTop},
+            {x: box.offsetLeft + box.offsetWidth, y: box.offsetTop},
+            {x: box.offsetLeft, y: box.offsetTop + box.offsetHeight},
+            {x: box.offsetLeft + box.offsetWidth, y: box.offsetTop + box.offsetHeight}
+        ];
+
+        // Rotate each corner and adjust the box's position if a corner is out of bounds
+        for (var i = 0; i < corners.length; i++) {
+            var corner = rotatePoint(centerX, centerY, randomRadian, corners[i]);
+            if (corner.x < 0) {
+                box.style.left = (box.offsetLeft - corner.x) + 'px';
+            }
+            if (corner.y < minY) {
+                box.style.top = (box.offsetTop - corner.y + minY) + 'px';
+            }
+            if (corner.x > maxX) {
+                box.style.left = (box.offsetLeft - (corner.x - maxX)) + 'px';
+            }
+            if (corner.y > maxY) {
+                box.style.top = (box.offsetTop - (corner.y - maxY)) + 'px';
+            }
+        }
+
+        // Set the position of the green box
+        if (Math.random() < 0.5) {
+            greenBox.style.left = '2px';
+            greenBox.style.top = '694px';
+        } else {
+            greenBox.style.left = '207px';
+            greenBox.style.top = '694px';
+        }
+    };
+
+
+    // window.onload = function() {
+    //     var field = document.getElementById('field');
+    //     var box = document.getElementById('box');
+    //     var greenBox = document.getElementById('greenBox');
+
+    //     var maxX = field.clientWidth - box.offsetWidth;
+
+    //     // Set maxY to be between 30 and 300
+    //     var minY = 110;
+    //     var maxY = 550 - minY;  // Subtract minY to adjust the range
+
+    //     box.style.left = Math.floor(Math.random() * maxX) + 'px';
+    //     box.style.top = minY + Math.floor(Math.random() * maxY) + 'px';  // Add minY to the calculated top value
+
+    //     // Rotate the box randomly
+    //     var randomDegree = Math.floor(Math.random() * 360);
+    //     box.style.transform = 'rotate(' + randomDegree + 'deg)';
+
+    //     // Set the position of the green box
+    //     if (Math.random() < 0.5) {
+    //         greenBox.style.left = '2px';
+    //         greenBox.style.top = '694px';
+    //     } else {
+    //         greenBox.style.left = '207px';
+    //         greenBox.style.top = '694px';
+    //     }
+    // };
+    </script>
+</body>
+</html>
