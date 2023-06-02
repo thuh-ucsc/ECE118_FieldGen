@@ -75,8 +75,20 @@
         randomDegree = Math.floor(Math.random() * 360);
         blueBox.style.transform = 'rotate(' + randomDegree + 'deg)';
 
+        var centerX = box.offsetLeft + box.offsetWidth / 2;        
+        var AssignLeft = true;
+        var toggleProb = 0.25;
+        
+        if (centerX < maxX/2){
+            AssignLeft = true ^ (Math.random() < toggleProb);
+        }
+        else{
+            AssignLeft = false ^ (Math.random() < toggleProb);
+        }
+    
+
         // Set position for Assigned Loading Zone
-        if (Math.random() < 0.5) {
+        if (AssignLeft) {            
             greenBox.style.left = '2px';
             greenBox.style.top = '694px';
             adjustBoxPosition(blueBox, randomDegree, minX=0, minY=-30, maxX=greenBox.clientWidth+30, maxY=greenBox.clientHeight);
